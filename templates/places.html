@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angel Food</title>
+</head>
+<body>
+    {% for place in places %}
+        {{ place.place_name }}<br>
+        {{ place.cuisine }}<br>
+        {{ place.price_per }}<br>
+        {{ place.review_headline }}<br>
+        {{ place.review_text }}<br>
+        {{ place.takeaway }}<br>
+    {% endfor %}
+</body>
+</html>

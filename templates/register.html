@@ -51,4 +51,14 @@
     </div>
 </div>
 
+{% if alert_title and alert_message %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showAlert("{{ alert_title }}", "{{ alert_message }}");
+    });
+</script>
+{% endblock %}
+{% endif %}
+
 {% endblock %}

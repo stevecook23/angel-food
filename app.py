@@ -125,7 +125,7 @@ def forgot_password():
         return "Email not found"
     return render_template("forgot.html")
 
-# Handles email-sending for 
+# Handles email-sending for forgot password
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
@@ -135,9 +135,11 @@ app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
 def send_reset_email(email, reset_link):
-    msg = Message('Password Reset Request',
-                  sender='noreply@yourdomain.com',
-                  recipients=[email])
+    msg = Message(
+        'Password Reset Request',
+        sender='noreply@angelfood.com',
+        recipients=[email]
+    )
     msg.body = f"Click the following link to reset your password: {reset_link}"
     mail.send(msg)
 

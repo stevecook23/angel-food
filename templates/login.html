@@ -36,6 +36,13 @@
                             </span>
                         </div>
                     </div>
+                    
+                    <!-- Error message -->
+                    {% if error_msg %}
+                    <div class="row red-text text-darken-2 center-align">
+                        <p>{{ error_msg }}</p>
+                    </div>
+                    {% endif %}
 
                     <!-- submit -->
                     <div class="row center-align">
@@ -45,6 +52,7 @@
                             </button>
                         </div>
                     </div>
+
                 </div>
             </form>
         </div>
@@ -59,15 +67,5 @@
         </p>
     </div>
 </div>
-
-{% if alert_title and alert_message %}
-{% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        showAlert("{{ alert_title }}", "{{ alert_message }}");
-    });
-</script>
-{% endblock %}
-{% endif %}
 
 {% endblock %}

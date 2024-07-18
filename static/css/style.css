@@ -18,28 +18,3 @@ main {
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* CSS for the flash messages across the site */
-.flashes h4 {
-  line-height: 2;
-}
-
-.flash-message {
-  position: relative;
-  opacity: 1 !important;
-  transition: opacity 1s ease-in-out !important;
-  padding: 10px !important;
-  margin-top: 20px;
-  border-radius: 5px;
-}
-
-.flash-message.fade-out {
-  opacity: 0 !important;
-}
-
-.flash-text {
-  display: block;
-  width: 100%;
-  text-align: center;
-  color: #1b5e20; 
-  font-weight: 500;
-}

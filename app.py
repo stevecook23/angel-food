@@ -5,6 +5,7 @@ from flask import (
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+import time
 if os.path.exists("env.py"):
     import env
 
@@ -36,9 +37,7 @@ def register():
         
         # Message if the username already exists
         if existing_user:
-            return render_template("register.html", 
-                                   alert_title="Registration Failed",
-                                   alert_message="Username already exists!")
+            return render_template("register.html")
 
         # Adding the new user
         register = {
@@ -51,35 +50,30 @@ def register():
         session["user"] = request.form.get("username").lower()
         places = mongo.db.places.find()
         return render_template("places.html", 
-                                places = places,
-                               alert_title="Registration Successful",
-                               alert_message="You have been registered successfully!")
+                                places = places)
     return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        existing_user = mongo.db.users.find_one(
-            {"username": request.form.get("username").lower()})
+        username = request.form.get("username").lower()
+        password = request.form.get("password")
+        
+        existing_user = mongo.db.users.find_one({"username": username})
 
         if existing_user:
-            if check_password_hash(
-                existing_user["password"], request.form.get("password")):
-                    session["user"] = request.form.get("username").lower()
-                    places = mongo.db.places.find()
-                    return render_template("places.html",
-                                            places=places, 
-                                            alert_title="Welcome",
-                                            alert_message="Welcome, {}".format(request.form.get("username")))
+            if check_password_hash(existing_user["password"], password):
+                session["user"] = username
+                places = mongo.db.places.find()
+                return render_template("places.html", places=places)
             else:
-                return render_template("login.html", 
-                                       alert_title="Login Failed",
-                                       alert_message="Incorrect Username and/or Password")
+                error_msg = "Incorrect username/password. Please try again."
+                return render_template("login.html", error_msg=error_msg)
         else:
-            return render_template("register.html", 
-                                   alert_title="User Not Found",
-                                   alert_message="User does not exist - Please register")
+            error_msg = "Username not found. Please register if you're new."
+            time.sleep(1)  # Delay so the error message can be read
+            return render_template("register.html", error_msg=error_msg)
 
     return render_template("login.html")
 
@@ -88,9 +82,7 @@ def login():
 def logout():
     # Removes the user from the session cookie, logging them out
     session.pop("user")
-    return render_template("login.html", 
-                           alert_title="Logged Out",
-                           alert_message="You have been logged out successfully.")
+    return render_template("login.html")
 
 
 if __name__ == "__main__":

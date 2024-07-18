@@ -66,7 +66,7 @@ def login():
             if check_password_hash(existing_user["password"], password):
                 session["user"] = username
                 places = mongo.db.places.find()
-                return render_template("places.html", places=places)
+                return render_template("places.html", places=places, username=username)
             else:
                 error_msg = "Incorrect username/password. Please try again."
                 return render_template("login.html", error_msg=error_msg)
@@ -80,9 +80,24 @@ def login():
 
 @app.route("/logout")
 def logout():
-    # Removes the user from the session cookie, logging them out
-    session.pop("user")
+    # Removes the user from the session cookie if logged in, logging them out
+    if "user" in session:
+        session.pop("user")
     return render_template("login.html")
+
+
+@app.route("/profile/<username>", methods=["GET", "POST"])
+def profile(username):
+    # Validate that the user is logged in and accessing their own profile
+    if session.get("user") != username:
+        return redirect(url_for("login"))
+
+    # Fetch user details based on the username parameter
+    user = mongo.db.users.find_one({"username": username})
+    if not user:
+        return "User not found", 404
+
+    return render_template("profile.html", username=username)
 
 
 if __name__ == "__main__":

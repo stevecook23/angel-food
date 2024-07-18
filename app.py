@@ -5,7 +5,10 @@ from flask import (
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime, timedelta
+from flask_mail import Mail, Message
 import time
+import secrets
 if os.path.exists("env.py"):
     import env
 
@@ -42,7 +45,8 @@ def register():
         # Adding the new user
         register = {
             "username": request.form.get("username").lower(),
-            "password": generate_password_hash(request.form.get("password"))
+            "password": generate_password_hash(request.form.get("password")),
+            "email": request.form.get("email").lower()
         }
         mongo.db.users.insert_one(register)
 
@@ -98,6 +102,69 @@ def profile(username):
         return "User not found", 404
 
     return render_template("profile.html", username=username)
+
+# This section is for 'forgot my password'
+@app.route("/forgot_password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "POST":
+        email = request.form.get("email").lower()
+        user = mongo.db.users.find_one({"email": email})
+        if user:
+            # Generate a unique token
+            token = secrets.token_urlsafe(32)
+            # Store the token in the database with an expiration time
+            mongo.db.password_reset.insert_one({
+                "email": email,
+                "token": token,
+                "expiry": datetime.utcnow() + timedelta(hours=1)
+            })
+            # Send email with reset link
+            reset_link = url_for('reset_password', token=token, _external=True)
+            send_reset_email(email, reset_link)
+            return render_template("login.html")
+        return "Email not found"
+    return render_template("forgot.html")
+
+# Handles email-sending for 
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
+def send_reset_email(email, reset_link):
+    msg = Message('Password Reset Request',
+                  sender='noreply@yourdomain.com',
+                  recipients=[email])
+    msg.body = f"Click the following link to reset your password: {reset_link}"
+    mail.send(msg)
+
+
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    if request.method == "POST":
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        if password != confirm_password:
+            return "Passwords do not match"
+        
+        reset_request = mongo.db.password_reset.find_one({
+            "token": token,
+            "expiry": {"$gt": datetime.utcnow()}
+        })
+        if not reset_request:
+            return "Invalid or expired token"
+        
+        hashed_password = generate_password_hash(password)
+        mongo.db.users.update_one(
+            {"email": reset_request["email"]},
+            {"$set": {"password": hashed_password}}
+        )
+        mongo.db.password_reset.delete_one({"token": token})
+        return render_template("login.html")
+    return render_template("reset_password.html")
 
 
 if __name__ == "__main__":

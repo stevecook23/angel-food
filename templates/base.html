@@ -13,13 +13,27 @@
   <title>Angel Food</title>
 </head>
 
-<body>
-  <header>
-    <nav>
-      <div class="nav-wrapper green darken-1">
-        <a href="#!" class="brand-logo">Logo</a>
-        <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
-        <ul class="right hide-on-med-and-down">
+<body class="d-flex flex-column min-vh-100">
+  <main class="flex-shrink-0">
+      <header>
+        <nav>
+          <div class="nav-wrapper green darken-1">
+            <a href="#!" class="brand-logo">Logo</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="{{ url_for('show_places') }}">Home</a></li>
+              {% if session.user %}
+              <li><a href="{{ url_for('profile', username=session['user']) }}">Profile</a></li>
+              <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+              {% else %}
+              <li><a href="{{ url_for('login') }}">Log In</a></li>
+              <li><a href="{{ url_for('register') }}">Register</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+
+        <ul class="sidenav" id="mobile-demo">
           <li><a href="{{ url_for('show_places') }}">Home</a></li>
           {% if session.user %}
           <li><a href="{{ url_for('profile', username=session['user']) }}">Profile</a></li>
@@ -29,32 +43,23 @@
           <li><a href="{{ url_for('register') }}">Register</a></li>
           {% endif %}
         </ul>
-      </div>
-    </nav>
+      </header>
 
-    <ul class="sidenav" id="mobile-demo">
-      <li><a href="{{ url_for('show_places') }}">Home</a></li>
-      {% if session.user %}
-      <li><a href="{{ url_for('profile', username=session['user']) }}">Profile</a></li>
-      <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-      {% else %}
-      <li><a href="{{ url_for('login') }}">Log In</a></li>
-      <li><a href="{{ url_for('register') }}">Register</a></li>
-      {% endif %}
-    </ul>
-  </header>
-
-  {% block content %}
-  {% endblock %}
-
-  <footer class="page-footer green darken-1">
-    <div class="footer-copyright">
+      {% block content %}
+      {% endblock %}
+    </main>
+  
+    <footer class="footer mt-auto green darken-1">
       <div class="container">
-        © 2024 Steve Cook
-        <a class="grey-text text-lighten-4 right" href="https://www.stevecookfiction.com">My Portfolio</a>
+        <div class="footer-content">
+          <div class="footer-copyright">
+            © 2024 Steve Cook
+            <a class="grey-text text-lighten-4 right" href="https://www.stevecookfiction.com">My Portfolio</a>
+          </div>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
+  
 
   <!--JQuery for Materialize-->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

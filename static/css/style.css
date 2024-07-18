@@ -1,3 +1,32 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+  padding: 20px 0; /* Adjust this value to increase/decrease footer height */
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 50px; /* Adjust this value to set a minimum height */
+}
+
+.footer-copyright {
+  width: 100%;
+}
+
 body {
     display: flex;
     min-height: 100vh;

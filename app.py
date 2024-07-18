@@ -20,8 +20,8 @@ mongo = PyMongo(app)
 
 
 @app.route("/")
-@app.route("/get_places")
-def get_places():
+@app.route("/show_places")
+def show_places():
     places = mongo.db.places.find()
     return render_template("places.html", places=places)
 

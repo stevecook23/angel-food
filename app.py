@@ -249,6 +249,12 @@ def delete_place(place_id):
     return redirect(url_for("show_places"))
 
 
+# Route to the Cuisines page
+@app.route("/get_cuisines")
+def get_cuisines():
+    cuisines = list(mongo.db.cuisine.find().sort("cuisine_name", 1))
+    return render_template("cuisines.html", cuisines=cuisines)
+
 # Cloudinary details
 cloudinary.config(
     cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),

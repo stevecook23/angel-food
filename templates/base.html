@@ -36,12 +36,15 @@
                   <ul class="right hide-on-med-and-down">
               <li><a href="{{ url_for('show_places') }}">Home</a></li>
               {% if session.user %}
-              <li><a href="{{ url_for('profile', username=session['user']) }}">My Places</a></li>
-              <li><a href="{{ url_for('add_place') }}">Add A Place</a></li>
-              <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+                <li><a href="{{ url_for('profile', username=session['user']) }}">My Places</a></li>
+                <li><a href="{{ url_for('add_place') }}">Add A Place</a></li>
+                {% if session.user|lower == "admin"|lower %}
+                  <li><a href="{{ url_for('get_cuisines') }}">Manage Cuisines</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}">Log Out</a></li>
               {% else %}
-              <li><a href="{{ url_for('login') }}">Log In</a></li>
-              <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li><a href="{{ url_for('login') }}">Log In</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
               {% endif %}
             </ul>
           </div>
@@ -53,12 +56,15 @@
         <ul class="sidenav" id="mobile-demo">
           <li><a href="{{ url_for('show_places') }}">Home</a></li>
           {% if session.user %}
-          <li><a href="{{ url_for('profile', username=session['user']) }}">My Places</a></li>
-          <li><a href="{{ url_for('add_place') }}">Add A Place</a></li>
-          <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('profile', username=session['user']) }}">My Places</a></li>
+            <li><a href="{{ url_for('add_place') }}">Add A Place</a></li>
+            {% if session.user|lower == "admin"|lower %}
+              <li><a href="{{ url_for('get_cuisines') }}">Manage Cuisines</a></li>
+            {% endif %}
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
           {% else %}
-          <li><a href="{{ url_for('login') }}">Log In</a></li>
-          <li><a href="{{ url_for('register') }}">Register</a></li>
+            <li><a href="{{ url_for('login') }}">Log In</a></li>
+            <li><a href="{{ url_for('register') }}">Register</a></li>
           {% endif %}
         </ul>
       </header>

@@ -255,6 +255,20 @@ def get_cuisines():
     cuisines = list(mongo.db.cuisine.find().sort("cuisine_name", 1))
     return render_template("cuisines.html", cuisines=cuisines)
 
+
+# Route to the Add Cuisines page
+@app.route("/add_cuisine", methods=["GET", "POST"])
+def add_cuisine():
+    if request.method == "POST":
+        cuisine = {
+            "cuisine_name": request.form.get("cuisine_name")
+        }
+        mongo.db.cuisine.insert_one(cuisine)
+        return redirect(url_for("get_cuisines"))
+
+    return render_template("add_cuisine.html")
+
+
 # Cloudinary details
 cloudinary.config(
     cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),

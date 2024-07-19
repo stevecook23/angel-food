@@ -31,6 +31,7 @@ def show_places():
     return render_template("places.html", places=places)
 
 
+# Route for the Register a New User page
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -58,6 +59,7 @@ def register():
     return render_template("register.html")
 
 
+# Route for the Login page
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -143,7 +145,7 @@ def send_reset_email(email, reset_link):
     msg.body = f"Click the following link to reset your password: {reset_link}"
     mail.send(msg)
 
-
+# Route to the Reset Password page
 @app.route("/reset_password/<token>", methods=["GET", "POST"])
 def reset_password(token):
     if request.method == "POST":
@@ -167,6 +169,13 @@ def reset_password(token):
         mongo.db.password_reset.delete_one({"token": token})
         return render_template("login.html")
     return render_template("reset_password.html")
+
+
+# Route to the Add A Place page
+@app.route("/add_place")
+def add_place():
+    cuisine = mongo.db.cuisine.find().sort("cuisine_name", 1)
+    return render_template("add_place.html", cuisine=cuisine)
 
 
 if __name__ == "__main__":

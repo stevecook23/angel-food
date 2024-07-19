@@ -197,8 +197,7 @@ def add_place():
                 place["image_url"] = upload_result['secure_url']
 
         mongo.db.places.insert_one(place)
-        flash("New place added successfully!")
-        return redirect(url_for("places"))
+        return redirect(url_for("show_places"))
 
     cuisines = list(mongo.db.cuisine.find().sort("cuisine_name", 1))
     return render_template("add_place.html", cuisines=cuisines)

@@ -15,7 +15,7 @@
             <i class="material-icons prefix">restaurant</i>
             <select id="cuisine_name" name="cuisine_name" class="validate" required>
                 <option value="" disabled selected>Choose Cuisine</option>
-                {% for cuisine in cuisine %}
+                {% for cuisine in cuisines %}
                     <option value="{{ cuisine.cuisine_name }}">{{ cuisine.cuisine_name }}</option>
                 {% endfor %}
             </select>

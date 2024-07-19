@@ -269,6 +269,19 @@ def add_cuisine():
     return render_template("add_cuisine.html")
 
 
+# Route to the Edit Cuisines page
+@app.route("/edit_cuisine/<cuisine_id>", methods=["GET", "POST"])
+def edit_cuisine(cuisine_id):
+    if request.method == "POST":
+        submit = {
+            "cuisine_name": request.form.get("cuisine_name")
+        }
+        mongo.db.categories.update({"_id": ObjectId(cuisine_id)}, submit)
+        return redirect(url_for("get_cuisines"))
+    cuisine = mongo.db.cuisine.find_one({"_id": ObjectId(cuisine_id)})
+    return render_template("edit_cuisine.html", cuisine=cuisine)
+
+
 # Cloudinary details
 cloudinary.config(
     cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),

@@ -17,7 +17,7 @@
                             <option value="" disabled>Choose Cuisine</option>
                             {% for cuisine in cuisines %}
                                 <option value="{{ cuisine.cuisine_name }}" {% if cuisine.cuisine_name == place.cuisine_name %}selected{% endif %}>
-                                    {{ cuisine.cuisine_name }}
+                                    {{- cuisine.cuisine_name -}}
                                 </option>
                             {% endfor %}
                         </select>
@@ -48,7 +48,7 @@
                         <select id="price_per" name="price_per" class="validate" required>
                             <option value="" disabled>Choose rough price per person</option>
                             {% for price in range(5, 61, 5) %}
-                                <option value="{{ price }}" {% if price|string == place.price_per|string %}selected{% endif %}>£{{ price }}</option>
+                                <option value="{{ price }}" {% if price|string == place.price_per|string %}selected{% endif %}>£{{- price -}}</option>
                             {% endfor %}
                         </select>
                         <label for="price_per">Price per person</label>
@@ -59,7 +59,7 @@
                     <div class="input-field col s12">
                         <i class="material-icons prefix">insert_comment</i>
                         <textarea id="review_headline" name="review_headline" minlength="5"
-                            maxlength="200" class="materialize-textarea validate" required>{{ place.review_headline }}</textarea>
+                            maxlength="200" class="materialize-textarea validate" required>{{- place.review_headline -}}</textarea>
                         <label for="review_headline">Review Headline</label>
                     </div>
                 </div>

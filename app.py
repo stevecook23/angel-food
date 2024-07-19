@@ -194,7 +194,10 @@ def add_place():
         if 'place_image' in request.files:
             file = request.files['place_image']
             if file:
-                upload_result = cloudinary.uploader.upload(file)
+                upload_result = cloudinary.uploader.upload(file, 
+                    transformation=[
+                        {'width': 500, 'height': 500, 'crop': 'fill'}
+                    ])
                 place["image_url"] = upload_result['secure_url']
 
         mongo.db.places.insert_one(place)
@@ -226,8 +229,11 @@ def edit_place(place_id):
         if 'place_image' in request.files:
             file = request.files['place_image']
             if file:
-                upload_result = cloudinary.uploader.upload(file)
-                submit["image_url"] = upload_result['secure_url']
+                upload_result = cloudinary.uploader.upload(file, 
+                    transformation=[
+                        {'width': 500, 'height': 500, 'crop': 'fill'}
+                    ])
+                place["image_url"] = upload_result['secure_url']
 
         mongo.db.places.update_one({"_id": ObjectId(place_id)}, {"$set": submit})
         flash("Place Successfully Updated")
@@ -239,8 +245,9 @@ def edit_place(place_id):
 # Route to the Delete Place page
 @app.route("/delete_place/<place_id>")
 def delete_place(place_id):
-    mongo.db.places.remove({"_id": ObjectId(place_id)})
+    mongo.db.places.delete_one({"_id": ObjectId(place_id)})
     return redirect(url_for("show_places"))
+
 
 # Cloudinary details
 cloudinary.config(
@@ -249,6 +256,12 @@ cloudinary.config(
     api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
     secure=True
 )
+
+
+# Cloudinary cropping to squares
+@app.template_filter('cloudinary_url')
+def cloudinary_url_filter(source, **kwargs):
+    return cloudinary_url(source, **kwargs)[0] if source else ''
         
 
 if __name__ == "__main__":

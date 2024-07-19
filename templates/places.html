@@ -7,7 +7,7 @@
 
             <div class="card">
                 <div class="card-image waves-effect waves-block waves-light">
-                    <img class="activator" src="{{ place.image_url }}" alt="{{ place.place_name }}">
+                    <img class="activator" src="{{ place.image_url|default('', true)|cloudinary_url(width=500, height=500, crop='fill') }}" alt="{{ place.place_name }}">
                 </div>
                 <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">{{ place.place_name }}<i

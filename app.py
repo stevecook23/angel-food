@@ -9,6 +9,10 @@ from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 import time
 import secrets
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from cloudinary.utils import cloudinary_url
 if os.path.exists("env.py"):
     import env
 
@@ -171,12 +175,43 @@ def reset_password(token):
     return render_template("reset_password.html")
 
 
-# Route to the Add A Place page
-@app.route("/add_place")
+@app.route("/add_place", methods=['GET', 'POST'])
 def add_place():
-    cuisine = mongo.db.cuisine.find().sort("cuisine_name", 1)
-    return render_template("add_place.html", cuisine=cuisine)
+    if request.method == 'POST':
+        takeaway = "on" if request.form.get("takeaway") else "off"
+        place = {
+            "cuisine_name": request.form.get("cuisine_name"),
+            "place_name": request.form.get("place_name"),
+            "review_headline": request.form.get("review_headline"),
+            "review_text": request.form.get("review_text"),
+            "takeaway": takeaway,
+            "visited": request.form.get("visited"),
+            "created_by": session["user"],
+            "price_per": request.form.get("price_per")
+        }
 
+        if 'place_image' in request.files:
+            file = request.files['place_image']
+            if file:
+                upload_result = cloudinary.uploader.upload(file)
+                place["image_url"] = upload_result['secure_url']
+
+        mongo.db.places.insert_one(place)
+        flash("New place added successfully!")
+        return redirect(url_for("places"))
+
+    cuisines = list(mongo.db.cuisine.find().sort("cuisine_name", 1))
+    return render_template("add_place.html", cuisines=cuisines)
+
+
+# Cloudinary details
+cloudinary.config(
+    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key = os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
+    secure=True
+)
+        
 
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),

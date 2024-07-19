@@ -293,10 +293,9 @@ def delete_cuisine(cuisine_id):
 # Search functionality
 @app.route('/search')
 def search():
-    query = request.args.get('query', '') 
-    results = search_places(query)
-    return render_template('search_results.html', results=results)
-
+    query = request.args.get('query', '')
+    results = list(search_places(query))  # Convert cursor to list
+    return render_template('search_results.html', results=results, query=query)
 
 def search_places(query):
     query = query.lower()

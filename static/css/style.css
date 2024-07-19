@@ -187,3 +187,19 @@ select:focus option:checked {
 #search {
   margin-right: 10px;
 }
+
+/* Changing the colour of the default text in the search bar */
+.custom-placeholder::placeholder {
+  color: #757575; 
+  opacity: 1; 
+}
+
+/* For Internet Explorer */
+.custom-placeholder:-ms-input-placeholder {
+  color: #757575;
+}
+
+/* For Microsoft Edge */
+.custom-placeholder::-ms-input-placeholder {
+  color: #757575;
+}

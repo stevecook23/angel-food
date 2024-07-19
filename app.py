@@ -282,6 +282,13 @@ def edit_cuisine(cuisine_id):
     return render_template("edit_cuisine.html", cuisine=cuisine)
 
 
+# Route to the Delete Cuisines functionality
+@app.route("/delete_cuisine/<cuisine_id>")
+def delete_cuisine(cuisine_id):
+    mongo.db.cuisine.delete_one({"_id": ObjectId(cuisine_id)})
+    return redirect(url_for("get_cuisines"))
+
+
 # Cloudinary details
 cloudinary.config(
     cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),

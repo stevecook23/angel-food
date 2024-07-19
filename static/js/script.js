@@ -21,13 +21,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize all modals
   var elems = document.querySelectorAll('.modal');
   var instances = M.Modal.init(elems);
 
-  var deleteButtons = document.querySelectorAll('.delete-place');
+  var deleteButtons = document.querySelectorAll('.delete-place, .delete-cuisine');
   var confirmDelete = document.getElementById('confirmDelete');
   var deleteUrl;
 
+  // Attach event listeners to all delete buttons
   deleteButtons.forEach(function(button) {
       button.addEventListener('click', function(e) {
           e.preventDefault();
@@ -37,8 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 
+  // Confirm delete action
   confirmDelete.addEventListener('click', function() {
-      window.location.href = deleteUrl;
+      if (deleteUrl) {
+          window.location.href = deleteUrl;
+      }
   });
 });
 

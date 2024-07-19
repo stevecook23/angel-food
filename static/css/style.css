@@ -43,6 +43,11 @@ main {
   margin-top: 30px;
 }
 
+/* Additional CSS specific to the Manage Cuisines page */
+.card-no-margin {
+  margin-top: 0 !important;
+}
+
 /* Text shadow on buttons */
 .text-shadow {
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
@@ -53,6 +58,7 @@ main {
   margin-right: 5px;
 }
 
+/* CSS for the logo */
 .brand-logo {
   display: flex;
   align-items: center;
@@ -86,6 +92,7 @@ main {
   }
 }
 
+/* CSS for the front page cards */
 .card {
   display: flex;
   flex-direction: column;
@@ -116,8 +123,9 @@ main {
   color: rgba(0, 0, 0, 0.6);
 }
 
+/* CSS for password hint text alignment */
 .password-help-container {
-  padding-left: 3rem;  /* Adjust this value to align with the input field */
+  padding-left: 3rem;  
 }
 
 .forgot-password-link {
@@ -151,15 +159,6 @@ select:focus option:checked {
   color: rgba(0, 0, 0, 0.6);
 }
 
-/* Default placeholder text color for the select elements */
-select option[value=""][disabled] {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-
-.file-path-wrapper input.file-path {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-
 /* CSS for the takeaway toggle to get the image in line */
 .switch-container {
   display: flex;
@@ -168,9 +167,11 @@ select option[value=""][disabled] {
 
 .switch-container .material-icons {
   margin-right: 1rem;
-  line-height: 24px; /* Adjust line-height to vertically align the icon */
+  line-height: 17px; 
 }
 
 .switch {
-  margin-left: 1rem; /* Adjust this value if needed */
+  margin-left: 2rem; 
 }
+
+

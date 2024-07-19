@@ -1,15 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="container">
     <div class="row">
         <div class="col s12 m8 offset-m2">
-            <div class="row">
-                <h3 class="center-align">
-                    {{ username }}'s Places
-                </h3>
-            </div>
+            <h3 class="center-align">
+                {{ username }}'s Places
+            </h3>
         </div>
     </div>
 
-    
-    {% endblock %}
+    <div class="row">
+        {% if user_places %}
+            {% for place in user_places %}
+            <div class="col s12 m6 l4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator"
+                            src="{{ place.image_url|default('', true)|cloudinary_url(width=500, height=500, crop='fill') }}"
+                            alt="{{ place.place_name }}">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">{{ place.place_name }}<i
+                                class="material-icons right">more_vert</i></span>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">{{ place.place_name }}<i
+                                class="material-icons right">close</i></span>
+                        <p class="place-info cuisine">Cuisine: {{ place.cuisine_name }}</p>
+                        <p class="place-info price">Price per person: £{{ place.price_per }}</p>
+                        <p class="place-info review-headline">Review: {{ place.review_headline }}</p>
+                        <p class="place-info review-text">{{ place.review_text }}</p>
+                        <p class="place-info takeaway">Takeaway: {% if place.takeaway == "on" %}Yes{% else %}No{% endif %}
+                        </p>
+                        <p class="place-info visited">Visited:
+                            {{ place.visited if place.visited else 'Date not provided' }}</p>
+                        <div class="place-info actions">
+                            <a href="{{ url_for('edit_place', place_id=place._id) }}"
+                                class="btn-small light-green darken-2">Edit</a>
+                            <a href="{{ url_for('delete_place', place_id=place._id) }}"
+                                class="btn-small red darken-2 delete-place">Delete</a>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <p class="reported-by right-align">Reported by: {{ place.created_by }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="col s12">
+            <p class="center-align">You have not added any places yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

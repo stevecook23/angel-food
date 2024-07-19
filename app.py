@@ -96,18 +96,19 @@ def logout():
     return render_template("login.html")
 
 
-@app.route("/profile/<username>", methods=["GET", "POST"])
-def profile(username):
-    # Validate that the user is logged in and accessing their own profile
-    if session.get("user") != username:
-        return redirect(url_for("login"))
+@app.route("/profile")
+def profile():
+    # Check if user is logged in
+    if 'user' not in session:
+        return redirect(url_for('login'))  # Redirect to login if no user session
 
-    # Fetch user details based on the username parameter
-    user = mongo.db.users.find_one({"username": username})
-    if not user:
-        return "User not found", 404
+    username = session['user']
+    
+    # Fetch places created by the logged-in user
+    user_places = list(mongo.db.places.find({'created_by': username}))
 
-    return render_template("profile.html", username=username)
+    return render_template("profile.html", username=username, user_places=user_places)
+
 
 # This section is for 'forgot my password'
 @app.route("/forgot_password", methods=["GET", "POST"])

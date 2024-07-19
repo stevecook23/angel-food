@@ -175,6 +175,7 @@ def reset_password(token):
     return render_template("reset_password.html")
 
 
+# Route to the Add Place page
 @app.route("/add_place", methods=['GET', 'POST'])
 def add_place():
     if request.method == 'POST':
@@ -202,6 +203,44 @@ def add_place():
     cuisines = list(mongo.db.cuisine.find().sort("cuisine_name", 1))
     return render_template("add_place.html", cuisines=cuisines)
 
+
+# Route to the Edit Place page
+@app.route("/edit_place/<place_id>", methods=["GET", "POST"])
+def edit_place(place_id):
+    place = mongo.db.places.find_one({"_id": ObjectId(place_id)})
+    cuisines = mongo.db.cuisine.find().sort("cuisine_name", 1)
+    
+    if request.method == 'POST':
+        takeaway = "on" if request.form.get("takeaway") else "off"
+        submit = {
+            "cuisine_name": request.form.get("cuisine_name"),
+            "place_name": request.form.get("place_name"),
+            "review_headline": request.form.get("review_headline"),
+            "review_text": request.form.get("review_text"),
+            "takeaway": takeaway,
+            "visited": request.form.get("visited"),
+            "created_by": session["user"],
+            "price_per": request.form.get("price_per")
+        }
+
+        if 'place_image' in request.files:
+            file = request.files['place_image']
+            if file:
+                upload_result = cloudinary.uploader.upload(file)
+                submit["image_url"] = upload_result['secure_url']
+
+        mongo.db.places.update_one({"_id": ObjectId(place_id)}, {"$set": submit})
+        flash("Place Successfully Updated")
+        return redirect(url_for("show_places"))
+    
+    return render_template("edit_place.html", place=place, cuisines=cuisines)
+
+
+# Route to the Delete Place page
+@app.route("/delete_place/<place_id>")
+def delete_place(place_id):
+    mongo.db.places.remove({"_id": ObjectId(place_id)})
+    return redirect(url_for("show_places"))
 
 # Cloudinary details
 cloudinary.config(

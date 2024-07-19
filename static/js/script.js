@@ -20,6 +20,27 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.modal');
+  var instances = M.Modal.init(elems);
+
+  var deleteButtons = document.querySelectorAll('.delete-place');
+  var confirmDelete = document.getElementById('confirmDelete');
+  var deleteUrl;
+
+  deleteButtons.forEach(function(button) {
+      button.addEventListener('click', function(e) {
+          e.preventDefault();
+          deleteUrl = this.getAttribute('href');
+          var instance = M.Modal.getInstance(document.getElementById('deleteModal'));
+          instance.open();
+      });
+  });
+
+  confirmDelete.addEventListener('click', function() {
+      window.location.href = deleteUrl;
+  });
+});
 
 /*
     vanilla JavaScript for MaterializeCSS initialization

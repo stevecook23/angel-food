@@ -24,6 +24,10 @@
                         {{ place.review_text }}<br>
                         Takeaway: {{ place.takeaway }}<br>
                     </p>
+                    {% if session.user|lower == place.created_by|lower %}
+                        <a href="{{ url_for('edit_place', place_id=place._id) }}" class="btn-small light-green darken-2">Edit</a>
+                        <a href="{{ url_for('delete_place', place_id=place._id) }}" class="btn-small red darken-2 delete-place">Delete</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

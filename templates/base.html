@@ -11,6 +11,10 @@
   <!--My CSS-->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
   <title>Angel Food</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='assets/images/favicon-32x32.png') }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='assets/images/favicon-16x16.png') }}">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -18,9 +22,18 @@
       <header>
         <nav>
           <div class="nav-wrapper green darken-1">
-            <a href="#!" class="brand-logo">Logo</a>
-            <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
-            <ul class="right hide-on-med-and-down">
+            <div class="container">
+              <div class="row">
+                <div class="col s12">
+                  <div class="brand-logo left">
+                    <div class="logo-container">
+                      <span class="logo-text">ANGEL</span>
+                      <img src="{{ url_for('static', filename='assets/images/angel-food.png') }}" alt="Angel Food Logo" class="logo-image">
+                      <span class="logo-text">FOOD</span>
+                    </div>
+                  </div>
+                  <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
+                  <ul class="right hide-on-med-and-down">
               <li><a href="{{ url_for('show_places') }}">Home</a></li>
               {% if session.user %}
               <li><a href="{{ url_for('profile', username=session['user']) }}">My Places</a></li>
@@ -32,7 +45,10 @@
               {% endif %}
             </ul>
           </div>
-        </nav>
+        </div>
+      </div>
+    </div>
+  </nav>
 
         <ul class="sidenav" id="mobile-demo">
           <li><a href="{{ url_for('show_places') }}">Home</a></li>

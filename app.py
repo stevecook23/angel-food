@@ -290,6 +290,26 @@ def delete_cuisine(cuisine_id):
     return redirect(url_for("get_cuisines"))
 
 
+# Search functionality
+@app.route('/search')
+def search():
+    query = request.args.get('query', '') 
+    results = search_places(query)
+    return render_template('search_results.html', results=results)
+
+
+def search_places(query):
+    query = query.lower()
+    results = mongo.db.places.find({
+        '$or': [
+            {'place_name': {'$regex': query, '$options': 'i'}},
+            {'review_headline': {'$regex': query, '$options': 'i'}}
+        ]
+    })
+    
+    return results
+
+
 # Cloudinary details
 cloudinary.config(
     cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Search Results</h1>
+  <div class="results">
+    {% if results %}
+      <ul>
+        {% for place in results %}
+          <li>
+            <h3>{{ place.name }}</h3>
+            <p>{{ place.description }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No results found.</p>
+    {% endif %}
+  </div>
+{% endblock %}

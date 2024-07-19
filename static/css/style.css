@@ -174,4 +174,16 @@ select:focus option:checked {
   margin-left: 2rem; 
 }
 
+.search-form {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
 
+.input-field {
+  flex: 1;
+}
+
+#search {
+  margin-right: 10px;
+}

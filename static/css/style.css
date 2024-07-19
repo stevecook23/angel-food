@@ -1,3 +1,4 @@
+/* General Styles */
 html, body {
   height: 100%;
 }
@@ -28,18 +29,18 @@ main {
 }
 
 body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-  }
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
 
 main {
-    flex: 1 0 auto;
-  }
+  flex: 1 0 auto;
+}
 
 /* Top margin on the place cards */
 .card {
-    margin-top: 30px;
+  margin-top: 30px;
 }
 
 /* Text shadow on buttons */
@@ -112,7 +113,7 @@ main {
 .reported-by {
   margin: 0;
   font-size: 0.9em;
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .password-help-container {
@@ -138,4 +139,38 @@ main {
 
 .helper-text li {
   list-style-type: disc;
+}
+
+/* Make dropdown and image input text color consistent */
+.select-dropdown li span {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* This will change the color of the selected option */
+select:focus option:checked {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Default placeholder text color for the select elements */
+select option[value=""][disabled] {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.file-path-wrapper input.file-path {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* CSS for the takeaway toggle to get the image in line */
+.switch-container {
+  display: flex;
+  align-items: center;
+}
+
+.switch-container .material-icons {
+  margin-right: 1rem;
+  line-height: 24px; /* Adjust line-height to vertically align the icon */
+}
+
+.switch {
+  margin-left: 1rem; /* Adjust this value if needed */
 }

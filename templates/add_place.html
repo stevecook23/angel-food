@@ -2,113 +2,97 @@
 {% block content %}
 
 <div class="row">
-    <div class="col s12 m8 offset-m2">
-<h3 class="center-align">
-    Add a Place
-</h3>
-
+  <div class="col s12 m8 offset-m2">
+    <h3 class="center-align">Add a Place</h3>
     <div class="row card-panel grey lighten-5">
-        <form class="col s12" method="POST" action="{{ url_for('add_place') }}" enctype="multipart/form-data">
-            
-            <div class="row">
-                <div class="input-field col s12">
+      <form class="col s12" method="POST" action="{{ url_for('add_place') }}" enctype="multipart/form-data">
+        <div class="row">
+          <div class="input-field col s12">
             <i class="material-icons prefix">restaurant</i>
             <select id="cuisine_name" name="cuisine_name" class="validate" required>
-                <option value="" disabled selected>Choose Cuisine</option>
-                {% for cuisine in cuisines %}
-                    <option value="{{ cuisine.cuisine_name }}">{{ cuisine.cuisine_name }}</option>
-                {% endfor %}
+              <option value="" disabled selected>Choose Cuisine</option>
+              {% for cuisine in cuisines %}
+              <option value="{{ cuisine.cuisine_name }}">{{ cuisine.cuisine_name }}</option>
+              {% endfor %}
             </select>
+          </div>
         </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">create</i>
+            <input id="place_name" name="place_name" minlength="5" maxlength="50" type="text" class="validate" required>
+            <label for="place_name">Name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">date_range</i>
+            <input id="visited" name="visited" type="text" class="datepicker validate" required>
+            <label for="visited">When did you visit?</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">credit_card</i>
+            <select id="price_per" name="price_per" class="validate" required>
+              <option value="" disabled selected>Price per person</option>
+              {% for price in range(5, 61, 5) %}
+              <option value="{{ price }}">£{{ price }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">insert_comment</i>
+            <textarea id="review_headline" name="review_headline" minlength="5" maxlength="200" class="materialize-textarea validate" required></textarea>
+            <label for="review_headline">Review Headline</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">insert_comment</i>
+            <textarea id="review_text" name="review_text" minlength="5" maxlength="200" class="materialize-textarea validate" required></textarea>
+            <label for="review_text">Review</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <div class="switch-container">
+              <i class="material-icons prefix">home</i>
+              <div class="switch">
+                <label for="takeaway">
+                  <input type="checkbox" id="takeaway" name="takeaway">
+                  <span class="lever"></span>Takeaway?
+                </label>
+              </div>
             </div>
-        
-
-            
-            
-            <div class="row">
-                <div class="input-field col s12">
-                    <i class="material-icons prefix">create</i>
-                    <input id="place_name" name="place_name" minlength="5" maxlength="50"
-                        type="text" class="validate" required>
-                    <label for="place_name">Name</label>
-                </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="file-field input-field">
+            <div class="btn btn-large green darken-4 text-shadow">
+              <span>Upload Image</span>
+              <input type="file" name="place_image" accept="image/*">
             </div>
-
-            <div class="row">
-                <div class="input-field col s12">
-                    <i class="material-icons prefix">date_range</i>
-                    <input id="visited" name="visited" type="text" class="datepicker validate" required>
-                    <label for="visited">When did you visit?</label>
-                </div>
+            <div class="file-path-wrapper">
+              <input class="file-path validate" type="text" placeholder="Upload an image">
             </div>
-
-            <div class="row">
-                <div class="input-field col s12">
-                    <i class="material-icons prefix">credit_card</i>
-                    <select id="price_per" name="price_per" class="validate" required>
-                        <option value="" disabled selected>Choose rough price per person</option>
-                        {% for price in range(5, 61, 5) %}
-                            <option value="{{ price }}">£{{ price }}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="price_per">Price per person</label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="input-field col s12">
-                    <i class="material-icons prefix">insert_comment</i>
-                    <textarea id="review_headline" name="review_headline" minlength="5"
-                        maxlength="200" class="materialize-textarea validate" required></textarea>
-                    <label for="review_headline">Review Headline</label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="input-field col s12">
-                    <i class="material-icons prefix">insert_comment</i>
-                    <textarea id="review_text" name="review_text" minlength="5"
-                        maxlength="200" class="materialize-textarea validate" required></textarea>
-                    <label for="review_text">Review</label>
-                </div>
-            </div>
-
-			<div class="row">
-				<div class="input-field col s12">
-					<div class="switch">
-                        <i class="material-icons prefix">home</i>
-						<label for="takeaway">
-                            <input type="checkbox" id="takeaway" name="takeaway">
-                            <span class="lever"></span>
-                            Takeaway?
-                        </label>
-					</div>
-				</div>
-			</div>
-            <div class="row">
-                <div class="file-field input-field">
-                    <div class="btn btn-large green darken-4 text-shadow">
-                        <span>Upload Image</span>
-                        <input type="file" name="place_image" accept="image/*">
-                    </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="Upload an image of the place or food">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12 center-align">
-                    <button type="submit" class="btn-large green darken-4 text-shadow">
-                        <i class="material-icons left">send</i>Add Place
-                    </button>
-                    <a href="{{ url_for('show_places') }}" class="btn-large red text-shadow">
-                        <i class="material-icons left">cancel</i>Cancel
-                    </a>
-                </div>
-            </div>
-        </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 center-align">
+            <button type="submit" class="btn-large green darken-4 text-shadow">
+              <i class="material-icons left">send</i>Add Place
+            </button>
+            <a href="{{ url_for('show_places') }}" class="btn-large red text-shadow">
+              <i class="material-icons left">cancel</i>Cancel
+            </a>
+          </div>
+        </div>
+      </form>
     </div>
-</div>
+  </div>
 </div>
 
 {% endblock %}

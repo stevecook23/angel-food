@@ -270,14 +270,15 @@ def add_cuisine():
     return render_template("add_cuisine.html")
 
 
-# Route to the Edit Cuisines page
 @app.route("/edit_cuisine/<cuisine_id>", methods=["GET", "POST"])
 def edit_cuisine(cuisine_id):
     if request.method == "POST":
         submit = {
-            "cuisine_name": request.form.get("cuisine_name")
+            "$set": {
+                "cuisine_name": request.form.get("cuisine_name")
+            }
         }
-        mongo.db.categories.update({"_id": ObjectId(cuisine_id)}, submit)
+        mongo.db.cuisine.update_one({"_id": ObjectId(cuisine_id)}, submit)
         return redirect(url_for("get_cuisines"))
     cuisine = mongo.db.cuisine.find_one({"_id": ObjectId(cuisine_id)})
     return render_template("edit_cuisine.html", cuisine=cuisine)

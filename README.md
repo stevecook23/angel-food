@@ -98,6 +98,4 @@ Now you have a copy of the source code and can start to work on it.
 Text is provided by users of the site
 
 ### Media
-#### Readme Images
-
-#### Game Images
+All media on this site is taken by users in the process of adding places or created by me. No stock images have been used.

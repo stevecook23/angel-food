@@ -1,4 +1,4 @@
-/* General Styles */
+/* Base Styles */
 html, body {
   height: 100%;
 }
@@ -6,49 +6,61 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 main {
   flex: 1 0 auto;
 }
 
+/* Footer Styles */
 .footer {
   flex-shrink: 0;
-  padding: 20px 0; /* Adjust this value to increase/decrease footer height */
+  padding: 20px 0;
 }
 
 .footer-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 50px; /* Adjust this value to set a minimum height */
+  min-height: 50px;
 }
 
 .footer-copyright {
   width: 100%;
 }
 
-body {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-main {
-  flex: 1 0 auto;
-}
-
-/* Top margin on the place cards */
+/* Card Styles */
 .card {
   margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-/* Additional CSS specific to the Manage Cuisines page */
 .card-no-margin {
   margin-top: 0 !important;
 }
 
-/* Text shadow on buttons */
+.card-image {
+  flex: 0 0 auto;
+}
+
+.card-content {
+  flex: 1 0 auto;
+}
+
+.card-reveal {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-action {
+  flex: 0 0 auto;
+  padding: 10px 20px !important;
+}
+
+/* Button Styles */
 .text-shadow {
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
@@ -58,17 +70,14 @@ main {
   margin-right: 5px;
 }
 
-/* CSS for the logo */
-.brand-logo {
+/* Logo Styles */
+.brand-logo, .logo-container {
   display: flex;
   align-items: center;
   height: 100%;
 }
 
 .logo-container {
-  display: flex;
-  align-items: center;
-  height: 100%;
   padding: 5px 0;
 }
 
@@ -92,38 +101,14 @@ main {
   }
 }
 
-/* CSS for the front page cards */
-.card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.card-image {
-  flex: 0 0 auto;
-}
-
-.card-content {
-  flex: 1 0 auto;
-}
-
-.card-reveal {
-  display: flex;
-  flex-direction: column;
-}
-
-.card-action {
-  flex: 0 0 auto;
-  padding: 10px 20px !important;
-}
-
+/* Typography Styles */
 .reported-by {
   margin: 0;
   font-size: 0.9em;
   color: rgba(0, 0, 0, 0.6);
 }
 
-/* CSS for password hint text alignment */
+/* Form Styles */
 .password-help-container {
   padding-left: 3rem;  
 }
@@ -133,13 +118,11 @@ main {
   margin-bottom: 10px;
 }
 
-/* Adjusting the helper-text positioning */
 .input-field .helper-text {
   min-height: auto;
   padding-left: 0;
 }
 
-/* Styling for the password requirements list */
 .helper-text ul {
   padding-left: 20px;
   margin-top: 5px;
@@ -149,17 +132,11 @@ main {
   list-style-type: disc;
 }
 
-/* Make dropdown and image input text color consistent */
-.select-dropdown li span {
+.select-dropdown li span, select:focus option:checked {
   color: rgba(0, 0, 0, 0.6) !important;
 }
 
-/* This will change the color of the selected option */
-select:focus option:checked {
-  color: rgba(0, 0, 0, 0.6);
-}
-
-/* CSS for the takeaway toggle to get the image in line */
+/* Toggle Switch Styles */
 .switch-container {
   display: flex;
   align-items: center;
@@ -174,6 +151,7 @@ select:focus option:checked {
   margin-left: 2rem; 
 }
 
+/* Search Form Styles */
 .search-form {
   display: flex;
   align-items: center;
@@ -188,18 +166,17 @@ select:focus option:checked {
   margin-right: 10px;
 }
 
-/* Changing the colour of the default text in the search bar */
-.custom-placeholder::placeholder {
-  color: #757575; 
-  opacity: 1; 
-}
-
-/* For Internet Explorer */
-.custom-placeholder:-ms-input-placeholder {
-  color: #757575;
-}
-
-/* For Microsoft Edge */
+/* Placeholder Styles */
+.custom-placeholder::placeholder,
+.custom-placeholder:-ms-input-placeholder,
 .custom-placeholder::-ms-input-placeholder {
   color: #757575;
+  opacity: 1;
+}
+
+@media only screen and (max-width: 992px) {
+  .sidenav-trigger {
+    position: absolute;
+    right: -30px; /* Adjust this value to move it closer to or further from the right edge */
+  }
 }

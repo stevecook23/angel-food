@@ -23,7 +23,29 @@ This site comprises several pages linked together with Jinja templating. Common 
 The images presented here are not final, and are indicative of what a user might see at the point in prototyping that this section of the Readme was written. Colours and designs are not final and are subject to change after prototyping and user testing.
 
 ### Main Page
-![name of page](readme_docs/prototype/link.png "name of page")
+![main page](readme_docs/prototype/main_page.png "main page")
+
+This page has the basic cards that display information about a place; a menu with options to view the user's places, to add a place, or logout; and a footer. The header and footer are common to all pages. Note that the currently-logged-in user is not an admin - admin users have extra privileges, detailed below. Cards would have edit and delete buttons, visible only for the places that the currently-logged-in user made.
+
+### Add A Place
+![add a place page](readme_docs/prototype/add_place.png "add a place page")
+
+This page has a form that sends the information about a new place to the database. Information collected here includes the name of the place, its type of cuisine (Japanese, Italian, Mexican etc) as a dropdown, the average price per person as a dropdown, the review headline, review text, and whether it does takeaway or not as a toggle. There is the ability to add an image, and the submit button. Not detailed is an 'Edit a place' page, which is identical except that the details from the database are already filled in, and the title is different.
+
+### Log In
+![log in](readme_docs/prototype/log_in.png "log in")
+
+This page has a basic login interface. Users can log in by inputting their username and password, which is stored on the database and protected by random symbols in the password. Note that the menu has changed to a non-logged-in variant - 'My Places' and 'Add a place' have both gone, replaced with 'Login' and 'Register'.
+
+### Register
+![register](readme_docs/prototype/register.png "register")
+
+Almost identical to the Log In page with the exception of requiring an email. I would like to have a 'forgot password' functionality, as it's something that I feel all websites should have. An email address would be vital to this feature.
+
+### Manage Cuisines
+![manage cuisines](readme_docs/prototype/cuisines.png "manage cuisines")
+
+This page would be for admin only so that they can add new cuisines, or modify the existing ones. Each card would have an 'edit' and 'delete' button. This page is only visible to admin users; note the added menu options at the top indicating that this user is an admin.
 
 ## Upcoming features
 + Google Maps integration - I would like to add the ability to select the place you are reviewing on Google Maps and either link to the Maps app on a phone or have a map onscreen.

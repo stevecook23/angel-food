@@ -234,7 +234,7 @@ def edit_place(place_id):
                     transformation=[
                         {'width': 500, 'height': 500, 'crop': 'fill'}
                     ])
-                place["image_url"] = upload_result['secure_url']
+                submit["image_url"] = upload_result['secure_url']  # Add this line
 
         mongo.db.places.update_one({"_id": ObjectId(place_id)}, {"$set": submit})
         flash("Place Successfully Updated")

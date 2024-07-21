@@ -47,6 +47,52 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+  // Confirm passwords match on Register.html
+document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    const passwordMatch = document.getElementById('password-match');
+    const submitBtn = document.getElementById('submitBtn');
+    const form = document.getElementById('registerForm');
+
+    function validatePasswords() {
+        if (password.value !== confirmPassword.value) {
+            passwordMatch.textContent = 'Passwords do not match';
+            passwordMatch.style.color = 'red';
+            submitBtn.disabled = true;
+        } else {
+            passwordMatch.textContent = 'Passwords match';
+            passwordMatch.style.color = 'green';
+            submitBtn.disabled = false;
+        }
+    }
+
+    password.addEventListener('input', validatePasswords);
+    confirmPassword.addEventListener('input', validatePasswords);
+
+    form.addEventListener('submit', function(e) {
+        if (password.value !== confirmPassword.value) {
+            e.preventDefault();
+            passwordMatch.textContent = 'Passwords do not match';
+            passwordMatch.style.color = 'red';
+        }
+    });
+});
+
+// Script for hiding/showing password on login
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+
+    togglePassword.addEventListener('click', function (e) {
+        
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+    });
+});
+
 /*
     vanilla JavaScript for MaterializeCSS initialization
 */

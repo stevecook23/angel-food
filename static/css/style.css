@@ -177,6 +177,20 @@ main {
 @media only screen and (max-width: 992px) {
   .sidenav-trigger {
     position: absolute;
-    right: -30px; /* Adjust this value to move it closer to or further from the right edge */
+    right: -30px; 
   }
+}
+
+/* Styling for seeing/not seeing your login password */
+.password-visibility {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    user-select: none;
+    padding: 10px;
+}
+
+.input-field {
+    position: relative;
 }

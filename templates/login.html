@@ -25,6 +25,9 @@
                             <input id="password" name="password" type="password" class="validate" minlength="5" maxlength="15"
                             pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,15}$" required>
                             <label for="password">Password</label>
+                            <span class="password-visibility">
+                                <i class="material-icons" id="togglePassword">visibility_off</i>
+                            </span>
                             
                             <div class="password-help-container">
                                 <a href="{{ url_for('forgot_password') }}" class="forgot-password-link">Forgot your password?</a>
@@ -40,7 +43,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     
                     <!-- Error message -->
                     {% if error_msg %}
@@ -72,5 +74,7 @@
         </p>
     </div>
 </div>
+
+
 
 {% endblock %}

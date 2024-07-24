@@ -88,7 +88,7 @@ def register():
             {"username": request.form.get("username").lower()})
         if existing_user:
             error_msg = "This account already exists. Please login."
-            return render_template("register.html")
+            return render_template("register.html", error_msg=error_msg)
 
         register = {
             "username": request.form.get("username").lower(),

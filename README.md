@@ -57,10 +57,62 @@ This page would be for admin only so that they can add new cuisines, or modify t
 + Deployment is from Heroku
 + Images are handled by Cloudinary
 + Wireframe and prototyping images were made in Figma
-+ Additional software used to create this website include Photoshop for image editing and Firefox for previewing, inspecting and bug testing
++ Additional software used to create this website include Photoshop for image editing and Firefox for previewing, inspecting and bug testing, as well as Chrome for the Lighthouse report
 
 ## Testing
-### Test Case: First test case name
+### Test Case: Main Page (not logged in)
++ Clicking on images/three dots opens up information about places
++ Images are displayed in blocks of 3 on desktop, 2 on tablet, 1 one smartphone
++ Edit and Delete buttons are not displayed
++ Menu at the top contains only Home, Login and Register
++ Attempting to access any other page via manually typing in URL redirects to Login page, as seen here:
+
+![testcase1](readme_docs/testcases/testcase1.png "Test Case 1")
+
++ Attempting to access any Admin-controlled areas of the site gives the following 403 error:
+
+![testcase2](readme_docs/testcases/testcase2.png "Test Case 2")
+
++ Attempting to access a specific record that is admin-controlled (to edit a cuisine type) gives the same message; in this image, I'm logged out, but the same result applies if I'm logged in as a non-admin account:
+
+![testcase3](readme_docs/testcases/testcase3.png "Test Case 3")
+
+### Test Case: Login
++ All fields are required
++ Incorrect password format gives the following error:
+
+![testcase4](readme_docs/testcases/testcase4.png "Test Case 4")
+
++ Incorrect username OR password gives the following error:
+
+![testcase5](readme_docs/testcases/testcase5.png "Test Case 5")
+
++ Correctly putting in both username and password logs the user in
++ Clicking 'forgot password' correctly begins the 'forgot password' flow, ending in the user being sent an email to change their password
+
+### Test Case: Register
++ All fields are required
++ Cannot type beyond maximum character limit of fields
++ Mismatched passwords prevent Register button being clicked:
+
+![testcase6](readme_docs/testcases/testcase6.png "Test Case 6")
+
++ Attempting to sign up as an existing user gives following error:
+
+![testcase7](readme_docs/testcases/testcase7.png "Test Case 7")
+
++ Correctly filling in form does send user to the front page, now logged-in
+
+### Test Case: Add Place
++ All fields are not required
++ Adding text beyond the character limit is not possible
++ Adding an image works as intended
++ Adding no image adds a default image instead called no_image.png to maintain quality of main page
+
+### Test Case: Edit Place
++ All fields are prefilled with database information
++ All fields can be edited and saved
++ Cancelling out of this returns the 
 
 ### Bugs discovered
 + Properly aligning icons in buttons proved to be a challenge, and also to the 'takeaway' toggle. I ended up having to provide some very specifically-targeted CSS for the takeaway toggle
@@ -69,12 +121,25 @@ This page would be for admin only so that they can add new cuisines, or modify t
 ## Code validation
 
 ### Lighthouse Report:
+![lighthouse report](readme_docs/testcases/lighthouse.png "lighthouse report")
+
+### <a href="https://pep8ci.herokuapp.com/#" target="_blank">Code Institute Linter</a>
+![ci linter report](readme_docs/testcases/CI-linter.png "CI linter report")
 
 ### <a href="https://jshint.com/" target="_blank">JSHint</a>
+![jshint report](readme_docs/testcases/jshint.png "jshint report")
+
+### <a href="https://validator.w3.org/" target="_blank">W3C</a>
+![w3c report](readme_docs/testcases/w3checker.png "w3c report")
+
+### <a href="https://jigsaw.w3.org/" target="_blank">Jigsaw</a>
+![jigsaw report](readme_docs/testcases/jigsaw.png "jigsaw report")
 
 ## Supported Screens and Browsers
 + This website works in any browser and at any screen size, from desktop down to smart phones.
 + It has been developed and tested for Firefox, and smaller screen sizes have been simulated with Firefox's Inspect tool. Sample screens of all currently-available smart phones have been tested through Firefox's Inspect tool. It has also been tested natively on a Pixel 7a device and a Pixel 6 Pro.
+
+![am I responsive](readme_docs/testcases/responsive.png "Am I responsive")
 
 ## Deployment
 This website has been deployed on Heroku, the deployment for which is available at https://angel-food-3a8bebdae07e.herokuapp.com/. It was developed using the Code Institute full template repository, available at Github.

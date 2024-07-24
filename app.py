@@ -210,7 +210,8 @@ def add_place():
             "price_per": request.form.get("price_per")
         }
 
-        if 'place_image' in request.files and request.files['place_image'].filename != '':
+        if ('place_image' in request.files and
+           request.files['place_image'].filename != ''):
             file = request.files['place_image']
             upload_result = cloudinary.uploader.upload(
                 file,

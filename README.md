@@ -109,6 +109,8 @@ This page would be for admin only so that they can add new cuisines, or modify t
 + Adding an image works as intended
 + Adding no image adds a default image instead called no_image.png to maintain quality of main page
 
+![testcase8](readme_docs/testcases/testcase8.png "Test Case 8")
+
 ### Test Case: Edit Place
 + All fields are prefilled with database information
 + All fields can be edited and saved
@@ -138,12 +140,10 @@ This page would be for admin only so that they can add new cuisines, or modify t
 ### Log Out
 + Log out functionality works, immediately logging the user out and returning them to the front page
 
-
-
 ### Bugs discovered
 + Properly aligning icons in buttons proved to be a challenge, and also to the 'takeaway' toggle. I ended up having to provide some very specifically-targeted CSS for the takeaway toggle
 + The default text on the 'create place' interface is in three different types of grey - black for the dropdowns, light grey for the image, and mid-grey for the remaining fields. Despite extensive effort, I've not been able to change this.
-+ Late in the production process, some changes I made meant that the first card of a new row rendered on the right hand side rather than the left. 
++ Late in the production process, some changes I made meant that the first card of a new row rendered on the right hand side rather than the left. This was introduced while adding the 'display placeholder image if none is provided' code; ultimately this was fixed by modifying the CSS. Following this, I rechecked the CSS and the app.py using the Code Institute linter, with both still passing with no errors.
 
 ## Code validation
 
@@ -184,7 +184,7 @@ To clone the repository from Github in your editor of choice:
 + Clone the repository by running: git clone https://github.com/stevecook23/angel-food.git
 + Change directories into the cloned repository: cd angel-food
 
-Now you have a copy of the source code and can start to work on it.
+Now you have a copy of the source code and can start to work on it. Bear in mind that the contents of the .env file, or the environment variables throughout the project, will not be publicly available - you will need to provide this file and these details yourself.
 
 ### Entity Relationship Document
 ![entity_relationship_document](readme_docs/testcases/entity_relationship_document.png "Entity Relationship Document")

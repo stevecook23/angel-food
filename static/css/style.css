@@ -13,61 +13,15 @@ main {
   flex: 1 0 auto;
 }
 
-/* Footer Styles */
-.footer {
-  flex-shrink: 0;
-  padding: 20px 0;
-}
-
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 50px;
-}
-
-.footer-copyright {
-  width: 100%;
-}
-
-/* Card Styles */
-.card {
-  margin-top: 30px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.card-no-margin {
-  margin-top: 0 !important;
-}
-
-.card-image {
-  flex: 0 0 auto;
-}
-
-.card-content {
-  flex: 1 0 auto;
-}
-
-.card-reveal {
-  display: flex;
-  flex-direction: column;
-}
-
-.card-action {
-  flex: 0 0 auto;
-  padding: 10px 20px !important;
-}
-
-/* Button Styles */
+/* Typography Styles */
 .text-shadow {
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
-.btn-large i.material-icons {
-  line-height: inherit;
-  margin-right: 5px;
+.reported-by {
+  margin: 0;
+  font-size: 0.9em;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 /* Logo Styles */
@@ -94,21 +48,76 @@ main {
   padding: 5px 0;
 }
 
-@media only screen and (max-width: 992px) {
-  .brand-logo {
-    left: 50%;
-    transform: translateX(-50%);
-  }
+/* Card Styles */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
-/* Typography Styles */
-.reported-by {
-  margin: 0;
-  font-size: 0.9em;
-  color: rgba(0, 0, 0, 0.6);
+.card {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  margin-top: 30px;
+}
+
+.card-no-margin {
+  margin-top: 0 !important;
+}
+
+.card-image {
+  flex: 0 0 auto;
+}
+
+.card-content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  width: 100%;
+}
+
+.card-title span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+}
+
+.card-title i {
+  flex-shrink: 0;
+}
+
+.card-reveal {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-action {
+  flex: 0 0 auto;
+  padding: 10px 20px !important;
+}
+
+/* Button Styles */
+.btn-large i.material-icons {
+  line-height: inherit;
+  margin-right: 5px;
 }
 
 /* Form Styles */
+.input-field {
+  flex: 1;
+  position: relative;
+}
+
 .password-help-container {
   padding-left: 3rem;  
 }
@@ -158,10 +167,6 @@ main {
   margin: 0;
 }
 
-.input-field {
-  flex: 1;
-}
-
 #search {
   margin-right: 10px;
 }
@@ -174,23 +179,42 @@ main {
   opacity: 1;
 }
 
+/* Password Visibility Styling */
+.password-visibility {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px;
+}
+
+/* Footer Styles */
+.footer {
+  flex-shrink: 0;
+  padding: 20px 0;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 50px;
+}
+
+.footer-copyright {
+  width: 100%;
+}
+
+/* Media Queries */
 @media only screen and (max-width: 992px) {
+  .brand-logo {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
   .sidenav-trigger {
     position: absolute;
     right: -30px; 
   }
-}
-
-/* Styling for seeing/not seeing your login password */
-.password-visibility {
-    position: absolute;
-    top: 0;
-    right: 0;
-    cursor: pointer;
-    user-select: none;
-    padding: 10px;
-}
-
-.input-field {
-    position: relative;
 }

@@ -96,12 +96,13 @@
                             <input class="file-path validate" type="text" placeholder="Upload an image of the place or food">
                         </div>
                     </div>
-                    {% if place.image_url %}
-                        <div class="col s12">
-                            <img src="{{ place.image_url }}" alt="{{ place.place_name }}" class="responsive-img">
-                        </div>
-                    {% endif %}
-                </div>
+                    <div class="col s12">
+                        {% if place.image_url.startswith('http') %}
+                            <img src="{{ place.image_url }}" alt="{{ place.place_name }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename=place.image_url) }}" alt="{{ place.place_name }}">
+                        {% endif %}
+                    </div>
                 
                 <div class="row">
                     <div class="col s12 center-align">

@@ -210,15 +210,16 @@ def add_place():
             "price_per": request.form.get("price_per")
         }
 
-        if 'place_image' in request.files:
+        if 'place_image' in request.files and request.files['place_image'].filename != '':
             file = request.files['place_image']
-            if file:
-                upload_result = cloudinary.uploader.upload(
-                    file,
-                    transformation=[
-                        {'width': 500, 'height': 500, 'crop': 'fill'}
-                    ])
-                place["image_url"] = upload_result['secure_url']
+            upload_result = cloudinary.uploader.upload(
+                file,
+                transformation=[
+                    {'width': 500, 'height': 500, 'crop': 'fill'}
+                ])
+            place["image_url"] = upload_result['secure_url']
+        else:
+            place["image_url"] = 'assets/images/no_image.png'
 
         mongo.db.places.insert_one(place)
         return redirect(url_for("show_places"))

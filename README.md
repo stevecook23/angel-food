@@ -112,11 +112,38 @@ This page would be for admin only so that they can add new cuisines, or modify t
 ### Test Case: Edit Place
 + All fields are prefilled with database information
 + All fields can be edited and saved
-+ Cancelling out of this returns the 
++ Cancelling out of this returns the user to the previous screen
+
+### Test Case: My Places
++ Places are navigable and interactable in exactly the same way as the front page
++ Only the currently-logged-in user's places are available
++ Attempting to navigate to another user's profile does not load the places, but instead remains on the current page
++ Delete button pops up a confirmation modal. Clicking anywhere but on the 'Confirm' button exits the modal and does not action the delete
+
+### Test Case: Cuisines
++ Only accessible if you are logged in as admin
++ Clickable 'Edit' and 'Delete' buttons function as expected
++ Delete button pops up a confirmation modal. Clicking anywhere but on the 'Confirm' button exits the modal and does not delete the cuisine
+
+### Test Case: Add Cuisine
++ The only field on this page is required
++ Adding text beyond the character limit is not possible
++ Adding an image works as intended
++ Adding no image adds a default image instead called no_image.png to maintain quality of main page
+
+### Test Case: Edit Cuisine
++ The field is prefilled with database information
++ Cancelling out of this returns the user to the previous screen
+
+### Log Out
++ Log out functionality works, immediately logging the user out and returning them to the front page
+
+
 
 ### Bugs discovered
 + Properly aligning icons in buttons proved to be a challenge, and also to the 'takeaway' toggle. I ended up having to provide some very specifically-targeted CSS for the takeaway toggle
 + The default text on the 'create place' interface is in three different types of grey - black for the dropdowns, light grey for the image, and mid-grey for the remaining fields. Despite extensive effort, I've not been able to change this.
++ Late in the production process, some changes I made meant that the first card of a new row rendered on the right hand side rather than the left. 
 
 ## Code validation
 
@@ -158,6 +185,9 @@ To clone the repository from Github in your editor of choice:
 + Change directories into the cloned repository: cd angel-food
 
 Now you have a copy of the source code and can start to work on it.
+
+### Entity Relationship Document
+![entity_relationship_document](readme_docs/testcases/entity_relationship_document.png "Entity Relationship Document")
 
 ## Credits
 ### Text Content

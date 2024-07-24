@@ -87,6 +87,7 @@ def register():
         existing_user = mongo.db.users.find_one(
             {"username": request.form.get("username").lower()})
         if existing_user:
+            error_msg = "This account already exists. Please login."
             return render_template("register.html")
 
         register = {

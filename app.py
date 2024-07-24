@@ -1,12 +1,13 @@
 import os
 from flask import (
     Flask, flash, render_template,
-    redirect, request, session, url_for)
+    redirect, request, session, url_for, abort)
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
+from functools import wraps
 import time
 import secrets
 import cloudinary
@@ -33,6 +34,26 @@ mongo = PyMongo(app)
 def show_places():
     places = mongo.db.places.find()
     return render_template("places.html", places=places)
+
+
+# Login required function
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+# Admin required function
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session or session['user'] != 'admin':
+            abort(403)  # Forbidden
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 # Route for the Register a New User page
@@ -97,16 +118,10 @@ def logout():
 
 
 @app.route("/profile")
+@login_required
 def profile():
-    # Check if user is logged in
-    if 'user' not in session:
-        return redirect(url_for('login'))  # Redirect to login if no user session
-
     username = session['user']
-    
-    # Fetch places created by the logged-in user
     user_places = list(mongo.db.places.find({'created_by': username}))
-
     return render_template("profile.html", username=username, user_places=user_places)
 
 
@@ -178,6 +193,7 @@ def reset_password(token):
 
 # Route to the Add Place page
 @app.route("/add_place", methods=['GET', 'POST'])
+@login_required
 def add_place():
     if request.method == 'POST':
         takeaway = "on" if request.form.get("takeaway") else "off"
@@ -210,6 +226,7 @@ def add_place():
 
 # Route to the Edit Place page
 @app.route("/edit_place/<place_id>", methods=["GET", "POST"])
+@login_required
 def edit_place(place_id):
     place = mongo.db.places.find_one({"_id": ObjectId(place_id)})
     cuisines = mongo.db.cuisine.find().sort("cuisine_name", 1)
@@ -245,6 +262,7 @@ def edit_place(place_id):
 
 # Route to the Delete Place page
 @app.route("/delete_place/<place_id>")
+@login_required
 def delete_place(place_id):
     mongo.db.places.delete_one({"_id": ObjectId(place_id)})
     return redirect(url_for("show_places"))
@@ -252,6 +270,7 @@ def delete_place(place_id):
 
 # Route to the Cuisines page
 @app.route("/get_cuisines")
+@admin_required
 def get_cuisines():
     cuisines = list(mongo.db.cuisine.find().sort("cuisine_name", 1))
     return render_template("cuisines.html", cuisines=cuisines)
@@ -259,6 +278,7 @@ def get_cuisines():
 
 # Route to the Add Cuisines page
 @app.route("/add_cuisine", methods=["GET", "POST"])
+@admin_required
 def add_cuisine():
     if request.method == "POST":
         cuisine = {
@@ -271,6 +291,7 @@ def add_cuisine():
 
 
 @app.route("/edit_cuisine/<cuisine_id>", methods=["GET", "POST"])
+@admin_required
 def edit_cuisine(cuisine_id):
     if request.method == "POST":
         submit = {
@@ -285,6 +306,7 @@ def edit_cuisine(cuisine_id):
 
 
 # Route to the Delete Cuisines functionality
+@admin_required
 @app.route("/delete_cuisine/<cuisine_id>")
 def delete_cuisine(cuisine_id):
     mongo.db.cuisine.delete_one({"_id": ObjectId(cuisine_id)})
@@ -317,6 +339,10 @@ cloudinary.config(
     api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
     secure=True
 )
+
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template('403.html'), 403
 
 
 # Cloudinary cropping to squares

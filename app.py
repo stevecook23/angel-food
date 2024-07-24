@@ -1,19 +1,22 @@
 import os
+import time
+import secrets
+from functools import wraps
+from datetime import datetime, timedelta
 from flask import (
-    Flask, flash, render_template,
-    redirect, request, session, url_for, abort)
+    Flask, flash, render_template, redirect,
+    request, session, url_for, abort
+)
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
 from flask_mail import Mail, Message
-from functools import wraps
-import time
-import secrets
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 from cloudinary.utils import cloudinary_url
+
+
 if os.path.exists("env.py"):
     import env
 
@@ -21,23 +24,35 @@ if os.path.exists("env.py"):
 app = Flask(__name__)
 
 
+# Configuration
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
 
 
+# Initialize extensions
 mongo = PyMongo(app)
+mail = Mail(app)
 
 
-@app.route("/")
-@app.route("/show_places")
-def show_places():
-    places = mongo.db.places.find()
-    return render_template("places.html", places=places)
+# Cloudinary configuration
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+    secure=True
+)
 
 
-# Login required function
+# Decorator functions
 def login_required(f):
+    """Decorator to require login for a route."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session:
@@ -46,29 +61,35 @@ def login_required(f):
     return decorated_function
 
 
-# Admin required function
 def admin_required(f):
+    """Decorator to require admin privileges for a route."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session or session['user'] != 'admin':
-            abort(403)  # Forbidden
+            abort(403)
         return f(*args, **kwargs)
     return decorated_function
 
 
-# Route for the Register a New User page
+# Routes
+@app.route("/")
+@app.route("/show_places")
+def show_places():
+    """Route to display all places."""
+    places = mongo.db.places.find()
+    return render_template("places.html", places=places)
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Route for user registration."""
     if request.method == "POST":
-        # Checking if the username already exists
         existing_user = mongo.db.users.find_one(
             {"username": request.form.get("username").lower()})
         
-        # Message if the username already exists
         if existing_user:
             return render_template("register.html")
 
-        # Adding the new user
         register = {
             "username": request.form.get("username").lower(),
             "password": generate_password_hash(request.form.get("password")),
@@ -76,34 +97,31 @@ def register():
         }
         mongo.db.users.insert_one(register)
 
-        # Add the new user to the current session's cookie
         session["user"] = request.form.get("username").lower()
         places = mongo.db.places.find()
-        return render_template("places.html", 
-                                places = places)
+        return render_template("places.html", places=places)
     return render_template("register.html")
 
 
-# Route for the Login page
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Route for user login."""
     if request.method == "POST":
         username = request.form.get("username").lower()
         password = request.form.get("password")
         
         existing_user = mongo.db.users.find_one({"username": username})
 
-        if existing_user:
-            if check_password_hash(existing_user["password"], password):
-                session["user"] = username
-                places = mongo.db.places.find()
-                return render_template("places.html", places=places, username=username)
-            else:
-                error_msg = "Incorrect username/password. Please try again."
-                return render_template("login.html", error_msg=error_msg)
+        if existing_user and check_password_hash(existing_user["password"], password):
+            session["user"] = username
+            places = mongo.db.places.find()
+            return render_template("places.html", places=places, username=username)
+        elif existing_user:
+            error_msg = "Incorrect username/password. Please try again."
+            return render_template("login.html", error_msg=error_msg)
         else:
             error_msg = "Username not found. Please register if you're new."
-            time.sleep(1)  # Delay so the error message can be read
+            time.sleep(1)
             return render_template("register.html", error_msg=error_msg)
 
     return render_template("login.html")
@@ -111,63 +129,43 @@ def login():
 
 @app.route("/logout")
 def logout():
-    # Removes the user from the session cookie if logged in, logging them out
-    if "user" in session:
-        session.pop("user")
+    """Route for user logout."""
+    session.pop("user", None)
     return render_template("login.html")
 
 
 @app.route("/profile")
 @login_required
 def profile():
+    """Route to display user profile."""
     username = session['user']
     user_places = list(mongo.db.places.find({'created_by': username}))
     return render_template("profile.html", username=username, user_places=user_places)
 
 
-# This section is for 'forgot my password'
 @app.route("/forgot_password", methods=["GET", "POST"])
 def forgot_password():
+    """Route for password reset request."""
     if request.method == "POST":
         email = request.form.get("email").lower()
         user = mongo.db.users.find_one({"email": email})
         if user:
-            # Generate a unique token
             token = secrets.token_urlsafe(32)
-            # Store the token in the database with an expiration time
             mongo.db.password_reset.insert_one({
                 "email": email,
                 "token": token,
                 "expiry": datetime.utcnow() + timedelta(hours=1)
             })
-            # Send email with reset link
             reset_link = url_for('reset_password', token=token, _external=True)
             send_reset_email(email, reset_link)
             return render_template("login.html")
         return "Email not found"
     return render_template("forgot.html")
 
-# Handles email-sending for forgot password
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
 
-def send_reset_email(email, reset_link):
-    msg = Message(
-        'Password Reset Request',
-        sender='noreply@angelfood.com',
-        recipients=[email]
-    )
-    msg.body = f"Click the following link to reset your password: {reset_link}"
-    mail.send(msg)
-
-# Route to the Reset Password page
 @app.route("/reset_password/<token>", methods=["GET", "POST"])
 def reset_password(token):
+    """Route to reset password."""
     if request.method == "POST":
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
@@ -191,10 +189,10 @@ def reset_password(token):
     return render_template("reset_password.html")
 
 
-# Route to the Add Place page
 @app.route("/add_place", methods=['GET', 'POST'])
 @login_required
 def add_place():
+    """Route to add a new place."""
     if request.method == 'POST':
         takeaway = "on" if request.form.get("takeaway") else "off"
         place = {
@@ -224,10 +222,10 @@ def add_place():
     return render_template("add_place.html", cuisines=cuisines)
 
 
-# Route to the Edit Place page
 @app.route("/edit_place/<place_id>", methods=["GET", "POST"])
 @login_required
 def edit_place(place_id):
+    """Route to edit an existing place."""
     place = mongo.db.places.find_one({"_id": ObjectId(place_id)})
     
     if not place or place['created_by'] != session['user']:
@@ -267,6 +265,7 @@ def edit_place(place_id):
 @app.route("/delete_place/<place_id>")
 @login_required
 def delete_place(place_id):
+    """Route to delete a place."""
     place = mongo.db.places.find_one({"_id": ObjectId(place_id)})
     
     if not place or place['created_by'] != session['user']:
@@ -277,18 +276,18 @@ def delete_place(place_id):
     return redirect(url_for("show_places"))
 
 
-# Route to the Cuisines page
 @app.route("/get_cuisines")
 @admin_required
 def get_cuisines():
+    """Route to display all cuisines."""
     cuisines = list(mongo.db.cuisine.find().sort("cuisine_name", 1))
     return render_template("cuisines.html", cuisines=cuisines)
 
 
-# Route to the Add Cuisines page
 @app.route("/add_cuisine", methods=["GET", "POST"])
 @admin_required
 def add_cuisine():
+    """Route to add a new cuisine."""
     if request.method == "POST":
         cuisine = {
             "cuisine_name": request.form.get("cuisine_name")
@@ -302,6 +301,7 @@ def add_cuisine():
 @app.route("/edit_cuisine/<cuisine_id>", methods=["GET", "POST"])
 @admin_required
 def edit_cuisine(cuisine_id):
+    """Route to edit an existing cuisine."""
     if request.method == "POST":
         submit = {
             "$set": {
@@ -314,51 +314,58 @@ def edit_cuisine(cuisine_id):
     return render_template("edit_cuisine.html", cuisine=cuisine)
 
 
-# Route to the Delete Cuisines functionality
-@admin_required
 @app.route("/delete_cuisine/<cuisine_id>")
+@admin_required
 def delete_cuisine(cuisine_id):
+    """Route to delete a cuisine."""
     mongo.db.cuisine.delete_one({"_id": ObjectId(cuisine_id)})
     return redirect(url_for("get_cuisines"))
 
 
-# Search functionality
 @app.route('/search')
 def search():
+    """Route for search functionality."""
     query = request.args.get('query', '')
-    results = list(search_places(query))  # Convert cursor to list
+    results = list(search_places(query))
     return render_template('search_results.html', results=results, query=query)
 
+
+# Helper functions
+def send_reset_email(email, reset_link):
+    """Send password reset email."""
+    msg = Message(
+        'Password Reset Request',
+        sender='noreply@angelfood.com',
+        recipients=[email]
+    )
+    msg.body = f"Click the following link to reset your password: {reset_link}"
+    mail.send(msg)
+
+
 def search_places(query):
+    """Search for places in the database."""
     query = query.lower()
-    results = mongo.db.places.find({
+    return mongo.db.places.find({
         '$or': [
             {'place_name': {'$regex': query, '$options': 'i'}},
             {'review_headline': {'$regex': query, '$options': 'i'}}
         ]
     })
-    
-    return results
 
 
-# Cloudinary details
-cloudinary.config(
-    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    api_key = os.environ.get('CLOUDINARY_API_KEY'),
-    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
-    secure=True
-)
-
+# Error handlers
 @app.errorhandler(403)
 def forbidden(e):
+    """Handle 403 Forbidden error."""
     return render_template('403.html'), 403
 
 
-# Cloudinary cropping to squares
+# Template filters
 @app.template_filter('cloudinary_url')
 def cloudinary_url_filter(source, **kwargs):
+    """Template filter for Cloudinary URLs."""
     return cloudinary_url(source, **kwargs)[0] if source else ''
-        
+
 
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),

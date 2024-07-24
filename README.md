@@ -49,6 +49,7 @@ This page would be for admin only so that they can add new cuisines, or modify t
 
 ## Upcoming features
 + Google Maps integration - I would like to add the ability to select the place you are reviewing on Google Maps and either link to the Maps app on a phone or have a map onscreen.
++ It's come to my attention subsequently that Flask has its own login functionality, which might have streamlined the process. As well, the 'forgot password' functionality works, but currently uses my own email address to send the emails, so having this set up to use a 'business' email would be useful. For the purposes of this project, though, it's not necessary.
 
 ## Technology
 + This website was made in its entirety using Gitpod Workspaces

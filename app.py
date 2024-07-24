@@ -229,6 +229,10 @@ def add_place():
 @login_required
 def edit_place(place_id):
     place = mongo.db.places.find_one({"_id": ObjectId(place_id)})
+    
+    if not place or place['created_by'] != session['user']:
+        abort(403)
+    
     cuisines = mongo.db.cuisine.find().sort("cuisine_name", 1)
     
     if request.method == 'POST':
@@ -251,7 +255,7 @@ def edit_place(place_id):
                     transformation=[
                         {'width': 500, 'height': 500, 'crop': 'fill'}
                     ])
-                submit["image_url"] = upload_result['secure_url']  # Add this line
+                submit["image_url"] = upload_result['secure_url']
 
         mongo.db.places.update_one({"_id": ObjectId(place_id)}, {"$set": submit})
         flash("Place Successfully Updated")
@@ -260,11 +264,16 @@ def edit_place(place_id):
     return render_template("edit_place.html", place=place, cuisines=cuisines)
 
 
-# Route to the Delete Place page
 @app.route("/delete_place/<place_id>")
 @login_required
 def delete_place(place_id):
+    place = mongo.db.places.find_one({"_id": ObjectId(place_id)})
+    
+    if not place or place['created_by'] != session['user']:
+        abort(403)
+    
     mongo.db.places.delete_one({"_id": ObjectId(place_id)})
+    flash("Place Successfully Deleted")
     return redirect(url_for("show_places"))
 
 

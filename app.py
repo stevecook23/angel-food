@@ -86,7 +86,6 @@ def register():
     if request.method == "POST":
         existing_user = mongo.db.users.find_one(
             {"username": request.form.get("username").lower()})
-        
         if existing_user:
             return render_template("register.html")
 
@@ -109,13 +108,18 @@ def login():
     if request.method == "POST":
         username = request.form.get("username").lower()
         password = request.form.get("password")
-        
-        existing_user = mongo.db.users.find_one({"username": username})
+        existing_user = mongo.db.users.find_one(
+            {"username": username})
 
-        if existing_user and check_password_hash(existing_user["password"], password):
+        if (existing_user and
+                check_password_hash(existing_user["password"], password)):
             session["user"] = username
             places = mongo.db.places.find()
-            return render_template("places.html", places=places, username=username)
+            return render_template(
+                "places.html",
+                places=places,
+                username=username
+            )
         elif existing_user:
             error_msg = "Incorrect username/password. Please try again."
             return render_template("login.html", error_msg=error_msg)
@@ -140,7 +144,8 @@ def profile():
     """Route to display user profile."""
     username = session['user']
     user_places = list(mongo.db.places.find({'created_by': username}))
-    return render_template("profile.html", username=username, user_places=user_places)
+    return render_template(
+        "profile.html", username=username, user_places=user_places)
 
 
 @app.route("/forgot_password", methods=["GET", "POST"])
@@ -171,14 +176,12 @@ def reset_password(token):
         confirm_password = request.form.get("confirm_password")
         if password != confirm_password:
             return "Passwords do not match"
-        
         reset_request = mongo.db.password_reset.find_one({
             "token": token,
             "expiry": {"$gt": datetime.utcnow()}
         })
         if not reset_request:
             return "Invalid or expired token"
-        
         hashed_password = generate_password_hash(password)
         mongo.db.users.update_one(
             {"email": reset_request["email"]},
@@ -209,7 +212,8 @@ def add_place():
         if 'place_image' in request.files:
             file = request.files['place_image']
             if file:
-                upload_result = cloudinary.uploader.upload(file, 
+                upload_result = cloudinary.uploader.upload(
+                    file,
                     transformation=[
                         {'width': 500, 'height': 500, 'crop': 'fill'}
                     ])
@@ -227,12 +231,9 @@ def add_place():
 def edit_place(place_id):
     """Route to edit an existing place."""
     place = mongo.db.places.find_one({"_id": ObjectId(place_id)})
-    
     if not place or place['created_by'] != session['user']:
         abort(403)
-    
     cuisines = mongo.db.cuisine.find().sort("cuisine_name", 1)
-    
     if request.method == 'POST':
         takeaway = "on" if request.form.get("takeaway") else "off"
         submit = {
@@ -249,16 +250,17 @@ def edit_place(place_id):
         if 'place_image' in request.files:
             file = request.files['place_image']
             if file:
-                upload_result = cloudinary.uploader.upload(file, 
+                upload_result = cloudinary.uploader.upload(
+                    file,
                     transformation=[
                         {'width': 500, 'height': 500, 'crop': 'fill'}
                     ])
                 submit["image_url"] = upload_result['secure_url']
 
-        mongo.db.places.update_one({"_id": ObjectId(place_id)}, {"$set": submit})
-        flash("Place Successfully Updated")
+        mongo.db.places.update_one(
+            {"_id": ObjectId(place_id)},
+            {"$set": submit})
         return redirect(url_for("show_places"))
-    
     return render_template("edit_place.html", place=place, cuisines=cuisines)
 
 
@@ -267,10 +269,8 @@ def edit_place(place_id):
 def delete_place(place_id):
     """Route to delete a place."""
     place = mongo.db.places.find_one({"_id": ObjectId(place_id)})
-    
     if not place or place['created_by'] != session['user']:
         abort(403)
-    
     mongo.db.places.delete_one({"_id": ObjectId(place_id)})
     flash("Place Successfully Deleted")
     return redirect(url_for("show_places"))
@@ -370,4 +370,4 @@ def cloudinary_url_filter(source, **kwargs):
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=True)
+            debug=False)

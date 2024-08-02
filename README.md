@@ -47,6 +47,9 @@ Almost identical to the Log In page with the exception of requiring an email. I 
 
 This page would be for admin only so that they can add new cuisines, or modify the existing ones. Each card would have an 'edit' and 'delete' button. This page is only visible to admin users; note the added menu options at the top indicating that this user is an admin.
 
+### Entity Relationship Document
+![entity_relationship_document](readme_docs/testcases/entity_relationship_document.png "Entity Relationship Document")
+
 ## Upcoming features
 + Google Maps integration - I would like to add the ability to select the place you are reviewing on Google Maps and either link to the Maps app on a phone or have a map onscreen.
 + It's come to my attention subsequently that Flask has its own login functionality, which might have streamlined the process. As well, the 'forgot password' functionality works, but currently uses my own email address to send the emails, so having this set up to use a 'business' email would be useful. For the purposes of this project, though, it's not necessary.
@@ -169,7 +172,7 @@ This page would be for admin only so that they can add new cuisines, or modify t
 ![am I responsive](readme_docs/testcases/responsive.png "Am I responsive")
 
 ## Deployment
-This website has been deployed on Heroku, the deployment for which is available at https://angel-food-3a8bebdae07e.herokuapp.com/. It was developed using the Code Institute full template repository, available at Github.
+This website has been deployed on Heroku, the deployment for which is available at https://angel-food-3a8bebdae07e.herokuapp.com/. It was developed using the Code Institute full template repository, available at Github. It can also be deployed locally on your machine.
 
 To view the deployment on Heroku:
 
@@ -186,8 +189,14 @@ To clone the repository from Github in your editor of choice:
 
 Now you have a copy of the source code and can start to work on it. Bear in mind that the contents of the .env file, or the environment variables throughout the project, will not be publicly available - you will need to provide this file and these details yourself.
 
-### Entity Relationship Document
-![entity_relationship_document](readme_docs/testcases/entity_relationship_document.png "Entity Relationship Document")
+To deploy the site locally on your machine, after you have cloned the repository from Github, please do the following:
+
++ Open your terminal
++ Input: python3 app.py
++ You will see several lines of text, including 'Running on' and an address
++ Ctrl-click the address, or copy it into your browser of choice
+
+You should now be able to view the app locally.
 
 ## Credits
 ### Text Content
